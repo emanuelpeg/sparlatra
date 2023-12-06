@@ -1,6 +1,6 @@
 package com.hexacta.app
-
 import org.scalatra._
+
 import scala.collection.mutable.ListBuffer
 
 class MyScalatraServlet extends ScalatraServlet {
@@ -46,4 +46,21 @@ class MyScalatraServlet extends ScalatraServlet {
 
     Ok(result.toList)
   }
+
+  get("/employees") {
+    println("hola")
+
+    val sparkSession = SparkContext.getSparkSession
+    val df = sparkSession
+      .read
+      .option("multiline","true")
+      .json("src/main/resources/employee.json")
+
+    // Displays the content of the DataFrame to stdout
+    df.show()
+    df.foreach(println)
+
+    df.select("employees.name").collectAsList().toString
+  }
+
 }

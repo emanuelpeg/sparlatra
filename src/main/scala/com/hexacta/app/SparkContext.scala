@@ -1,6 +1,7 @@
 package com.hexacta.app
 
 import org.apache.spark.SparkConf
+import org.apache.spark.sql.SparkSession
 
 object SparkContext {
 
@@ -14,9 +15,13 @@ object SparkContext {
   conf.setAppName("Hexacta")
 
   private val sc = new org.apache.spark.SparkContext(conf)
-
+  private val sparkSession = SparkSession.builder.config(conf).getOrCreate()
   def getSc = {
     sc
+  }
+
+  def getSparkSession = {
+    sparkSession
   }
 
 }
