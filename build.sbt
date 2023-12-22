@@ -14,8 +14,11 @@ lazy val hello = (project in file("."))
       "org.eclipse.jetty" % "jetty-webapp" % "11.0.17" % "container",
       "jakarta.servlet" % "jakarta.servlet-api" % "5.0.0" % "provided",
       "org.apache.spark" %% "spark-core" % "3.5.0",
-      "org.apache.spark" %% "spark-sql" % "3.5.0"
+      "org.apache.spark" %% "spark-sql" % "3.5.0",
+      "com.typesafe.slick" %% "slick" % "3.5.0-M4",
+      "com.h2database" % "h2" % "2.1.214"
     ),
+    libraryDependencies += "com.mchange" % "c3p0" % "0.9.5.5"
   )
 
 enablePlugins(SbtTwirl)
