@@ -12,4 +12,5 @@ class MyScalatraServletTests extends ScalatraFunSuite {
     }
   }
 
+  override def header: Nothing = ???
 }

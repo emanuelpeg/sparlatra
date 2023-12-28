@@ -1,9 +1,14 @@
 package com.hexacta.app
+
+import com.hexacta.app.data.{DBConfig, Tables}
 import org.scalatra._
 
 import scala.collection.mutable.ListBuffer
+import slick.jdbc.H2Profile.api._
 
-class MyScalatraServlet extends ScalatraServlet {
+import scala.concurrent.ExecutionContext
+
+class MyScalatraServlet extends ScalatraServlet with FutureSupport {
 
   get("/") {
     views.html.hello()
@@ -33,7 +38,6 @@ class MyScalatraServlet extends ScalatraServlet {
 
 
   get(s"/contar/:str") {
-
     //word count
     val counts = List({
       params("str")
@@ -63,4 +67,24 @@ class MyScalatraServlet extends ScalatraServlet {
     df.select("employees.name").collectAsList().toString
   }
 
+  get("/db/create-tables") {
+    DBConfig.h2Db.run(Tables.createSchemaAction)
+  }
+
+  get("/db/load-data") {
+    DBConfig.h2Db.run(Tables.insertProfiles)
+  }
+
+  get("/db/drop-tables") {
+    DBConfig.h2Db.run(Tables.dropSchemaAction)
+  }
+
+  get("/db/profiles") { // run the action and map the result to something more readable
+    DBConfig.h2Db.run(Tables.findProfilesNames.result) map { xs =>
+      contentType = "text/plain"
+      xs map (s1 => f"  $s1 profile") mkString "\n"
+    }
+  }
+
+  override protected implicit def executor: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
 }
